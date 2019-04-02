@@ -1,0 +1,125 @@
+easy_admin:
+    design:
+        menu:
+            - label: 'Administration'
+              children: ['LaboratoryProject', 'Annee']
+            - 'User'
+            - 'QuinquenalContract'
+            - 'LaboratoryProject'
+            - 'Annee'
+            - 'Typefundingresources'
+            - 'LigneBudgetType'
+            - { label: 'Gestion Budget' }
+            - 'LigneBudget'
+            - 'FundingResource'
+            - 'Costs'
+            - 'DocumentType'
+            - 'Document'
+            - 'DocumentFile'
+    formats:
+        date: 'd/m/Y'
+    entities:
+        User:
+            class: App\Entity\User
+            controller: App\Controller\AdminUserController
+            list:
+                title:  'Les utilisateurs'
+                fields: ['id', 'Username', 'email']
+                actions: ['edit', 'new'] 
+            edit:
+                exclude_fields: ['password', 'roles']
+        LigneBudget:
+            class: App\Entity\LigneBudget
+            list:
+                form_filters:
+                    - 'AnLigneBudget'
+                    - 'LaboratoryProject'          
+                max_results: 1000
+            form:
+                fields:
+                    - 'Nom'
+                    - 'ShortNom'
+                    - 'Description'
+                    - { property: 'LaboratoryProject', type: 'entity', type_options: { class: 'App\Entity\LaboratoryProject', multiple: true }  }
+                    - { property: 'LigneBudgetType', type: 'entity', type_options: { class: 'App\Entity\LigneBudgetType', multiple: true }  }
+                    - 'AnLigneBudget'
+                    - { property: date_ouverture, type: 'date' }
+                    - { property: date_fin, type: 'date', nullable: true }
+        Annee:
+            class: App\Entity\Annee
+            list: 
+                fields:
+                    - 'Nom'
+                    - { property: 'archived', type: 'toggle' }
+                    - { property: 'active', type: 'toggle' }
+            form:
+                fields:
+                    - 'Nom'
+                    - { property: 'archived', type: 'checkbox' }
+                    - { property: 'active', type: 'checkbox' }
+        QuinquenalContract:
+            class: App\Entity\QuinquenalContract
+            form:
+                fields:
+                    - 'Name'
+        LaboratoryProject:
+            class: App\Entity\LaboratoryProject
+            form:
+                fields:
+                    - 'Name'
+                    - 'ShortNom'
+                    - 'Description'
+                    - { property: 'persistent', type: 'checkbox' }
+                    - { property: 'active', type: 'checkbox' }
+                    - { property: 'QuinCont', type: 'entity', type_options: { class: 'App\Entity\QuinquenalContract', multiple: true }  }
+            list:
+                fields:
+                    - 'Name'
+                    - 'ShortNom'
+                    - 'Description'
+                    - { property: 'persistent', type: 'toggle' }
+                    - { property: 'active', type: 'toggle' }
+                    - { property: 'QuinCont', type: 'entity', type_options: { class: 'App\Entity\QuinquenalContract', multiple: true }  }
+        FundingResource:
+            class: App\Entity\FundingResource
+        Typefundingresources:
+            class: App\Entity\Typefundingresources
+        LigneBudgetTimeMontant:
+            class: App\Entity\LigneBudgetTimeMontant
+        LigneBudgetType:
+            class: App\Entity\LigneBudgetType
+        Costs:
+            controller: App\Controller\CostsController
+            class: App\Entity\Costs
+            form:
+                fields:
+                    - 'year'
+                    - 'CostDate'
+                    - 'Provider'
+                    - 'CostPrice'
+                    - 'BudgetLine'
+            list:
+                fields:
+                    - 'year'
+                    - 'CostDate'
+                    - 'Provider'
+                    - 'CostPrice'
+                    - 'CreateUser'
+        DocumentType:
+            class: App\Entity\Document\DocumentType
+        DocumentFile:
+            class: App\Entity\Document\DocumentFile
+            form:
+                fields:
+                    - { property: 'File', type: 'vich_file', basepath: '%app.path.documentfile_file%'}
+        Document:
+            class: App\Entity\Document\Document
+            controller: App\Controller\Document\DocumentController
+            form:
+                fields:
+                    - 'Name'
+                    - 'Description'
+                    - 'FileName'
+                    - 'Folder'
+                    - { property: 'DocumentType', type: 'entity', type_options: { class: 'App\Entity\Document\DocumentType', multiple: true }  }
+                    - { property: 'DocumentFile', type: 'collection', type_options: {entry_type: 'App\Form\Document\DocumentFileForm' }}

@@ -1,0 +1,7 @@
+{
+  "name": "compta-urafpa",
+  "version": "1",
+  "description": "Comptabilité",
+  "main": "index.js",
+  "license": "MIT"
+}
