@@ -5,19 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="dec511af-8ea9-4d20-8c3e-648a179517bf" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/EventListener/TraceUserData.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env.dist" beforeDir="false" afterPath="$PROJECT_DIR$/.env.dist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/easy_admin.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/easy_admin.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/AdminUserController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/AdminUserController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/Document/DocumentController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/Document/DocumentController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/BaseEntity/TraceUserDate.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/BaseEntity/TraceUserDate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Document/Document.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Document/Document.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/Document/DocumentFile.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Document/DocumentFile.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Entity/User.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/User.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Form/Document/DocumentFileForm.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/Document/DocumentFileForm.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Entity/LigneBudget.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/LigneBudget.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -47,10 +36,22 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Entity/BaseEntity/TraceUserDate.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="601">
-              <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
+            <state relative-caret-position="-83">
+              <caret line="78" lean-forward="true" selection-start-line="78" selection-end-line="78" />
               <folding>
                 <element signature="e#127#159#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Entity/LigneBudget.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="14" column="9" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+              <folding>
+                <element signature="e#98#146#0#PHP" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -68,7 +69,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Form/Document/DocumentFileForm.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="782">
@@ -124,15 +125,6 @@
               <folding>
                 <element signature="e#39#76#0#PHP" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/packages/vich_uploader.yaml">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="73" selection-start-line="6" selection-start-column="73" selection-end-line="6" selection-end-column="73" />
             </state>
           </provider>
         </entry>
@@ -234,6 +226,7 @@
         <option value="$PROJECT_DIR$/src/Entity/BaseEntity/TraceUserDate.php" />
         <option value="$PROJECT_DIR$/src/Controller/Document/DocumentController.php" />
         <option value="$PROJECT_DIR$/src/Form/Document/DocumentFileForm.php" />
+        <option value="$PROJECT_DIR$/src/Entity/LigneBudget.php" />
       </list>
     </option>
   </component>
@@ -398,26 +391,19 @@
             <path>
               <item name="compta-urafpa" type="b2602c69:ProjectViewProjectNode" />
               <item name="compta-urafpa" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
-              <item name="packages" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="compta-urafpa" type="b2602c69:ProjectViewProjectNode" />
-              <item name="compta-urafpa" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="compta-urafpa" type="b2602c69:ProjectViewProjectNode" />
               <item name="compta-urafpa" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="Form" type="462c0819:PsiDirectoryNode" />
+              <item name="Entity" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="compta-urafpa" type="b2602c69:ProjectViewProjectNode" />
               <item name="compta-urafpa" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="Form" type="462c0819:PsiDirectoryNode" />
-              <item name="Document" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -478,12 +464,20 @@
       <workItem from="1552826895728" duration="27915000" />
       <workItem from="1553149374185" duration="1385000" />
       <workItem from="1554206188774" duration="1669000" />
-      <workItem from="1556366204100" duration="618000" />
+      <workItem from="1556366204100" duration="3633000" />
     </task>
+    <task id="LOCAL-00001" summary="Ajout de la fonctionnalité de traçage des utilisateurs apportant une modification">
+      <created>1556366977886</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1556366977886</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="94773000" />
+    <option name="totallyTimeSpent" value="97788000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -492,6 +486,7 @@
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49048316" visible="true" weight="0.2342282" />
       <window_info id="Structure" order="1" sideWeight="0.50951684" side_tool="true" weight="0.14228188" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" sideWeight="0.49932885" visible="true" weight="0.329429" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49932885" weight="0.3045326" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -502,7 +497,7 @@
       <window_info anchor="bottom" id="Database Changes" order="7" />
       <window_info anchor="bottom" id="Version Control" order="8" />
       <window_info anchor="bottom" id="Terminal" order="9" />
-      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50067115" side_tool="true" weight="0.3045326" />
+      <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50067115" side_tool="true" weight="0.329429" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Inspection Results" order="12" visible="true" weight="0.32796487" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -535,6 +530,10 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Ajout de la fonctionnalité de traçage des utilisateurs apportant une modification" />
+    <option name="LAST_COMMIT_MESSAGE" value="Ajout de la fonctionnalité de traçage des utilisateurs apportant une modification" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/config/packages/validator.yaml">
@@ -767,16 +766,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/LigneBudget.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="4" selection-start-line="4" selection-start-column="4" selection-end-line="4" selection-end-column="4" />
-          <folding>
-            <element signature="e#98#146#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/vendor/easycorp/easyadmin-bundle/src/Event/EasyAdminEvents.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="941">
@@ -886,16 +875,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Entity/BaseEntity/TraceUserDate.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="601">
-          <caret line="101" lean-forward="true" selection-start-line="101" selection-end-line="101" />
-          <folding>
-            <element signature="e#127#159#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/Document/DocumentController.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="227">
@@ -912,6 +891,26 @@
           <caret line="46" column="1" selection-start-line="46" selection-start-column="1" selection-end-line="46" selection-end-column="1" />
           <folding>
             <element signature="e#61#101#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/BaseEntity/TraceUserDate.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-83">
+          <caret line="78" lean-forward="true" selection-start-line="78" selection-end-line="78" />
+          <folding>
+            <element signature="e#127#159#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Entity/LigneBudget.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="14" column="9" selection-start-line="14" selection-start-column="9" selection-end-line="14" selection-end-column="9" />
+          <folding>
+            <element signature="e#98#146#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>
