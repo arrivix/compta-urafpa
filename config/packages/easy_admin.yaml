@@ -25,7 +25,7 @@ easy_admin:
             list:
                 title:  'Les utilisateurs'
                 fields: ['id', 'Username', 'email']
-                actions: ['edit', 'new'] 
+                actions: ['edit', 'new']
             edit:
                 exclude_fields: ['password', 'roles']
         LigneBudget:
@@ -33,7 +33,7 @@ easy_admin:
             list:
                 form_filters:
                     - 'AnLigneBudget'
-                    - 'LaboratoryProject'          
+                    - 'LaboratoryProject'
                 max_results: 1000
             form:
                 fields:
@@ -47,7 +47,7 @@ easy_admin:
                     - { property: date_fin, type: 'date', nullable: true }
         Annee:
             class: App\Entity\Annee
-            list: 
+            list:
                 fields:
                     - 'Nom'
                     - { property: 'archived', type: 'toggle' }
@@ -112,6 +112,7 @@ easy_admin:
             form:
                 fields:
                     - { property: 'File', type: 'vich_file', basepath: '%app.path.documentfile_file%'}
+                    - { property: 'document', type: 'entity', type_options: { class: 'App\Entity\Document\Document', multiple: false }  }
         Document:
             class: App\Entity\Document\Document
             controller: App\Controller\Document\DocumentController
@@ -122,4 +123,4 @@ easy_admin:
                     - 'FileName'
                     - 'Folder'
                     - { property: 'DocumentType', type: 'entity', type_options: { class: 'App\Entity\Document\DocumentType', multiple: true }  }
-                    - { property: 'DocumentFile', type: 'collection', type_options: {entry_type: 'App\Form\Document\DocumentFileForm' }}
+                    - { property: 'DocumentFile', type: 'collection', type_options: {entry_type: 'App\Form\Document\DocumentFileForm', by_reference: false }}

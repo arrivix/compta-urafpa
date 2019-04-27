@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\HttpFoundation\File\File;
 use App\Entity\BaseEntity\TraceUserDate;
+use App\Entity\Document\Document;
 
 /**
  * @property string md5
@@ -26,7 +27,7 @@ class DocumentFile
     /**
      * @Vich\UploadableField(mapping="documentfile_file", fileNameProperty="FileName", size="Size")
      * @var File
-    */
+     */
     private $File;
     /**
      * @ORM\Column(type="string", length=255)
@@ -65,10 +66,18 @@ class DocumentFile
     private $active;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Document\Document", inversedBy="DocumentFile")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\ManyToOne(targetEntity="App\Entity\Document\Document", inversedBy="DocumentFiles")
      */
     private $document;
+
+    public function __construct()
+    {
+        $this->DateUpload = new \DateTime();
+        $this->Md5 = md5('3EZE');
+        $this->sha1 = sha1('3EZE');
+        $this->version =1;
+        $this->active =1;
+    }
 
     public function getId(): ?int
     {
@@ -189,5 +198,6 @@ class DocumentFile
 
         return $this;
     }
+
 
 }

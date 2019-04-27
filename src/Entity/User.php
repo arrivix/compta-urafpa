@@ -30,22 +30,22 @@ class User implements UserInterface
      */
     private $username;
 
-     /**
+    /**
      * @ORM\Column(type="boolean")
      */
-	 
-	private $active;
+
+    private $active;
 
     /**
      * @ORM\Column(type="boolean")
      */
-	 
-	private $depreciatedpassword;
+
+    private $depreciatedpassword;
 
     /**
      * @ORM\Column(type="json")
      */
-	 
+
     private $roles = [];
 
     /**
@@ -119,7 +119,7 @@ class User implements UserInterface
 
         return $this;
     }
-    
+
 
     /**
      * @see UserInterface
@@ -197,10 +197,10 @@ class User implements UserInterface
 
         return $this;
     }
-	public function __toString() 
-                                                                                 {
-                                                                              	   return (string) $this->username;
-                                                                                 }
+    public function __toString()
+    {
+        return (string) $this->username;
+    }
 
     /**
      * @return Collection|Responsible[]

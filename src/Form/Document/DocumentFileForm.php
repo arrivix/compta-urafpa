@@ -10,6 +10,8 @@ use App\Entity\Document\DocumentFile;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Entity\File;
 use Vich\UploaderBundle\Form\Type\VichFileType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 class DocumentFileForm extends AbstractType
 {
@@ -21,10 +23,19 @@ class DocumentFileForm extends AbstractType
     {
         $builder
             ->add('FileName', TextType::class)
-            ->add('File', VichFileType::class)  ;
+            ->add('File', VichFileType::class)
+            ->addEventListener(
+                FormEvents::POST_SET_DATA,
+                array($this, 'onPostSetData'))  ;
 
     }
-
+    public function onPostSetData(FormEvent $event)
+    {
+        if ($event->getData() && $event->getData()->getId()) {
+            $form = $event->getForm();
+            // unset($form['user']);
+        }
+    }
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(

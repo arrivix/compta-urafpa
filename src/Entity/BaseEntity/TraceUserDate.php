@@ -10,8 +10,15 @@ namespace App\Entity\BaseEntity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+
+/**
+ * @ORM\HasLifecycleCallbacks()
+ */
 trait TraceUserDate
 {
+
+
+
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User")
@@ -67,18 +74,16 @@ trait TraceUserDate
         return $this->Modification_date;
     }
 
-    public function setModificationDate(\DateTimeInterface $Modification_date): self
+    public function setModificationDate(): ?\DateTimeInterface
     {
-        if ( !is_null($this->getCreateDate())) {
-            $this->Modification_date = date("Y-m-d H:i:s");
-        }
 
-        return $this;
+        return $this->Modification_date = new \DateTime();
+
     }
 
 
 
-    public function getCreateDate()
+    public function getCreateDate(): ?\DateTimeInterface
     {
         return $this->Create_date;
     }
@@ -86,12 +91,11 @@ trait TraceUserDate
     /**
      * @return TraceUserDate
      */
-    public function setCreateDate(): self
+    public function setCreateDate(): ?\DateTimeInterface
     {
-        if (is_null($this->getCreateDate())) {
-            $this->Create_date = date("Y-m-d H:i:s");
+        if (is_null($this->Create_date)) {
+            return $this->Create_date = new \DateTime();
         }
         return $this;
     }
 }
-

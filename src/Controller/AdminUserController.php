@@ -6,15 +6,15 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use App\Entity\User;
 use EasyCorp\Bundle\EasyAdminBundle\Event\EasyAdminEvents;
 
- 
+
 class AdminUserController extends BaseAdminController
 {
-	 public function __construct(UserPasswordEncoderInterface $passwordEncoder)
-	 {
-		$this->passwordEncoder = $passwordEncoder;
-	}
-	 
- protected function EditAction()
+    public function __construct(UserPasswordEncoderInterface $passwordEncoder)
+    {
+        $this->passwordEncoder = $passwordEncoder;
+    }
+
+    protected function EditAction()
     {
         $this->dispatch(EasyAdminEvents::PRE_EDIT);
 
@@ -42,14 +42,14 @@ class AdminUserController extends BaseAdminController
         $deleteForm = $this->createDeleteForm($this->entity['name'], $id);
 
         $editForm->handleRequest($this->request);
-		if ($editForm->isSubmitted() && $editForm->isValid()) {
-			// hash the password before storing in db
-			$encodedPassword = $this->passwordEncoder->encodePassword(
-            $entity,
-            $entity->getPassword()
-        );
-			$entity->setPassword($encodedPassword);
-			//end change
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            // hash the password before storing in db
+            $encodedPassword = $this->passwordEncoder->encodePassword(
+                $entity,
+                $entity->getPassword()
+            );
+            $entity->setPassword($encodedPassword);
+            //end change
             $this->dispatch(EasyAdminEvents::PRE_UPDATE, array('entity' => $entity));
 
             $this->executeDynamicMethod('preUpdate<EntityName>Entity', array($entity, true));
@@ -71,7 +71,7 @@ class AdminUserController extends BaseAdminController
 
         return $this->executeDynamicMethod('render<EntityName>Template', array('edit', $this->entity['templates']['edit'], $parameters));
     }
-protected function newAction()
+    protected function newAction()
     {
         $this->dispatch(EasyAdminEvents::PRE_NEW);
 
@@ -86,7 +86,15 @@ protected function newAction()
         $newForm = $this->executeDynamicMethod('create<EntityName>NewForm', array($entity, $fields));
 
         $newForm->handleRequest($this->request);
+        dump($entity->getPassword());
         if ($newForm->isSubmitted() && $newForm->isValid()) {
+            $encodedPassword = $this->passwordEncoder->encodePassword(
+                $entity,
+                $entity->getPassword()
+            );
+            $entity->setPassword($encodedPassword);
+            dump($encodedPassword);
+            dump($entity->getPassword());
             $this->dispatch(EasyAdminEvents::PRE_PERSIST, array('entity' => $entity));
 
             $this->executeDynamicMethod('prePersist<EntityName>Entity', array($entity, true));
@@ -96,18 +104,17 @@ protected function newAction()
 
             return $this->redirectToReferrer();
         }
-		// hash the password before storing in db
-        $encodedPassword = $this->passwordEncoder->encodePassword(
-            $entity,
-            $entity->getPassword()
-        );
-        $entity->setPassword($encodedPassword);
-		//end change
+        // hash the password before storing in db
+
+
+
+        //end change
         $this->dispatch(EasyAdminEvents::POST_NEW, array(
             'entity_fields' => $fields,
             'form' => $newForm,
             'entity' => $entity,
         ));
+        dump($this);
 
         $parameters = array(
             'form' => $newForm->createView(),
@@ -117,7 +124,7 @@ protected function newAction()
 
         return $this->executeDynamicMethod('render<EntityName>Template', array('new', $this->entity['templates']['new'], $parameters));
     }
-	 protected function createeditForm($entity, array $entityProperties)
+    protected function createeditForm($entity, array $entityProperties)
     {
         return $this->createEntityForm($entity, $entityProperties, 'edit');
     }
@@ -162,7 +169,7 @@ protected function newAction()
                 'submenuIndex' => $this->request->query->get('submenuIndex'),
             ));
         }
-		
+
         // 4. from edit action, redirect to edit if possible
         if (in_array($refererAction, array('new', 'edit')) && $this->isActionAllowed('edit')) {
             return $this->redirectToRoute('easyadmin', array(

@@ -3,6 +3,7 @@
 namespace App\Entity\Document;
 
 use App\Entity\Document\DocumentPage;
+use App\Entity\Document\DocumentFile;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -53,13 +54,13 @@ class Document {
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Document\DocumentFile", mappedBy="document", orphanRemoval=true, cascade={"persist", "remove", "merge"})
      */
-    private $DocumentFile;
+    private $DocumentFiles;
 
     public function __construct()
     {
         $this->DocumentType = new ArrayCollection();
         $this->documentPages = new ArrayCollection();
-        $this->DocumentFile = new ArrayCollection();
+        $this->DocumentFiles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -144,7 +145,7 @@ class Document {
     /**
      * @return Collection|DocumentPage[]
      */
-    public function getDocumentPages(): Collection
+    public function getDocumentPage(): Collection
     {
         return $this->documentPages;
     }
@@ -177,13 +178,13 @@ class Document {
      */
     public function getDocumentFile(): Collection
     {
-        return $this->DocumentFile;
+        return $this->DocumentFiles;
     }
 
     public function addDocumentFile(DocumentFile $documentFile): self
     {
-        if (!$this->DocumentFile->contains($documentFile)) {
-            $this->DocumentFile[] = $documentFile;
+        if (!$this->DocumentFiles->contains($documentFile)) {
+            $this->DocumentFiles[] = $documentFile;
             $documentFile->setDocument($this);
         }
 
@@ -192,8 +193,8 @@ class Document {
 
     public function removeDocumentFile(DocumentFile $documentFile): self
     {
-        if ($this->DocumentFile->contains($documentFile)) {
-            $this->DocumentFile->removeElement($documentFile);
+        if ($this->DocumentFiles->contains($documentFile)) {
+            $this->DocumentFiles->removeElement($documentFile);
             // set the owning side to null (unless already changed)
             if ($documentFile->getDocument() === $this) {
                 $documentFile->setDocument(null);
@@ -201,6 +202,9 @@ class Document {
         }
 
         return $this;
+    }
+    public function __toString() {
+        return $this->Name;
     }
 
 }
