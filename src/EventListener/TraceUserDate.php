@@ -20,12 +20,12 @@ class TraceUserDate implements EventSubscriber
     public function __construct(TokenStorageInterface $token_storage)
     {
         $this->token_storage = $token_storage;
-        dump($this);
+        //dump($this);
     }
 
     public function getSubscribedEvents()
     {
-        dump('ok');
+        //dump('ok');
         return [
             Events::prePersist,
             Events::preUpdate
@@ -35,9 +35,9 @@ class TraceUserDate implements EventSubscriber
     public function prePersist(LifecycleEventArgs $args)
     {
         $user = $this->token_storage->getToken()->getUser();
-        dump($user);
+        //dump($user);
         $entity = $args->getObject();
-        dump($entity);
+        //dump($entity);
         if (method_exists($entity, 'setModificationUser' )){
             if (!$user instanceof User) {
                 $user = null;
@@ -51,6 +51,6 @@ class TraceUserDate implements EventSubscriber
         if (method_exists($entity, 'setCreateDate' )){
             $entity->setCreateDate();
         }
-        dump($entity);
+        //dump($entity);
     }
 }
