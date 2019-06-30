@@ -16,6 +16,6 @@
 ###< symfony/web-server-bundle ###
 
 ###< symfony/doctrine ###
-/src/Migrations
-/App/Migrations
+/src/Migrations/*
+/App/Migrations/*
 ###< symfony/doctrine ###
