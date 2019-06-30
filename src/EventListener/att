@@ -1,0 +1,457 @@
+
+node default {
+ class { 'helloworld': }
+
+}
+
+node 'node-01' {
+  include apt
+  include propdir
+  include instpackage
+  include mariasave
+	include elasticlogkib
+include cron
+  #include propdir
+
+package { ['mariadb-backup']:
+		ensure => installed,
+}
+
+	Apt::Source['mariadb'] ~>
+	Class['apt::update'] ->
+	Class['::mysql::server']-> 	Class['::mysql::client'] -> Package['mariadb-backup']
+
+
+class { 'apache':
+    service_ensure => true,
+    mpm_module    => 'prefork',
+    default_vhost => false,
+	notify => Exec['apt_update']
+	}
+class { 'apache::mod::php': }
+
+mysql_user {'Administrateur@localhost':
+	ensure => 'present',
+  password_hash => '*5629C36E3A0B97C8880C36C1590EFE4628E07B43',
+	require => Service['mysql'],
+}
+~>
+mysql_grant { 'Administrateur@localhost/*.*':
+ ensure     => 'present',
+ options    => ['GRANT'],
+ privileges => ['ALL PRIVILEGES'],
+table      => '*.*',
+ user       => 'Administrateur@localhost',
+	require => Service['mysql'],
+}
+
+mysql_user {'backup@localhost':
+	ensure => 'present',
+  password_hash => '*5629C36E3A0B97C8880C36C1590EFE4628E07B43',
+	require => Service['mysql'],
+}~>
+mysql_grant { 'backup@localhost/*.*':
+ ensure     => 'present',
+ options    => ['GRANT'],
+ privileges => ['RELOAD', 'LOCK TABLES','REPLICATION CLIENT', 'PROCESS'],
+ table      => '*.*',
+ user       => 'backup@localhost',
+	require => Service['mysql'],
+}
+
+  # Creating subdirectories
+
+file { ['/www',
+		'/www/subdomain',
+	]:
+    ensure => 'directory',
+    owner  => 'www-data',
+    group  => 'www-data',
+    mode   => '0755',
+ }
+
+#Trying Apache Hardening
+
+
+apache::vhost {
+
+'save':
+			serveraliases => [
+			    'save.localhost',
+			    'save.intra-bioda.urafpa.univ-lorraine.fr',
+			    'save.urafpa.univ-lorraine.fr',
+			  ],
+     			port            => ['80','443'],
+			docroot_owner	=> 'root',
+			docroot_group	=> 'www-data',
+      		docroot         => '/www/subdomain/save',
+}
+
+apache::vhost {
+'projet':
+			serveraliases => [
+			    'projet.localhost',
+			    'projet.intra-bioda.urafpa.univ-lorraine.fr',
+			    'projet.urafpa.univ-lorraine.fr',
+			  ],
+     			port            => ['80','443'],
+			docroot_owner	=> 'root',
+			docroot_group	=> 'www-data',
+      			docroot         => '/www/subdomain/projet',
+}
+
+apache::vhost {
+'ticket':
+			serveraliases => [
+			    'ticket.localhost',
+			    'ticket.intra-bioda.urafpa.univ-lorraine.fr',
+			    'ticket.urafpa.univ-lorraine.fr',
+			  ],
+     			port            => ['80','443'],
+			docroot_owner	=> 'root',
+			docroot_group	=> 'www-data',
+      		docroot         => '/www/subdomain/ticket',
+}
+
+apache::vhost {
+'phpmyadmin':
+			serveraliases => [
+			    'phpmyadmin.localhost',
+			    'phpmyadmin.intra-bioda.urafpa.univ-lorraine.fr',
+			    'phpmyadmin.urafpa.univ-lorraine.fr',
+			  ],
+     			port            => ['80','443'],
+			docroot_owner	=> 'root',
+			docroot_group	=> 'www-data',
+      			docroot         => '/www/subdomain/phpmyadmin',
+}
+
+apache::vhost { 'cas':
+			serveraliases => [
+			    'cas.localhost',
+			    'cas.intra-bioda.urafpa.univ-lorraine.fr',
+			    'cas.urafpa.univ-lorraine.fr',
+			  ],
+     			port            => ['80','443'],
+			docroot_owner	=> 'root',
+			docroot_group	=> 'www-data',
+      			docroot         => '/www/subdomain/cas',
+}
+
+apache::vhost {
+'intranet':
+			serveraliases => [
+			    'intranet.localhost',
+			    'intra-bioda.urafpa.univ-lorraine.fr',
+			    'intranet.urafpa.univ-lorraine.fr',
+			  ],
+     			port            => ['80','443'],
+			docroot_owner	=> 'root',
+			docroot_group	=> 'www-data',
+      			docroot         => '/var/www/project/public/',
+
+}
+
+
+
+
+apt::source { 'mariadb':
+		  location => 'http://ftp.igh.cnrs.fr/pub/mariadb/repo/10.3/ubuntu',
+		  release  => $::lsbdistcodename,
+		  repos    => 'main',
+		  allow_unsigned => true,
+		  /*key      => {
+		    id     => '0xF1656F24C74CD1D8',
+		    server => 'hkp://keyserver.ubuntu.com:80',
+		    },*/
+		  include => {
+		    src   => false,
+		    deb   => true,
+		    },
+		}
+
+
+vcsrepo { '/www/subdomain/save':
+	  ensure   => present,
+	  provider => git,
+	  source   => 'https://github.com/nextcloud/server.git',
+	  revision => 'stable15',
+	  require => Class['instpackage'],
+	}~>
+exec { 'composer-nxtcld':
+	command => 'sudo composer install',
+	path    => ['/usr/bin', '/usr/sbin',],
+	cwd 	=> '/www/subdomain/phpmyadmin',
+	refreshonly => true,
+	require => Class['instpackage'],
+	}->
+mysql::db { 'save':
+  user     => 'oc_admin',
+  password => '*5629C36E3A0B97C8880C36C1590EFE4628E07B43',
+  host     => 'localhost',
+  grant    => ['SELECT', 'INSERT','UPDATE', 'DELETE', 'CREATE', 'ALTER', 'INDEX', 'DROP', 'CREATE TEMPORARY TABLES',],
+	require => Service['mysql']
+}
+->
+file { ['/www/subdomain/save/data/',
+	'/www/subdomain/save/config/', '/www/subdomain/save/apps/']:
+    ensure => 'directory',
+    owner  => 'www-data',
+    group  => 'www-data',
+    mode   => '0640',
+ }
+~>
+class {propdir:
+path =>'/www/subdomain/save/',}
+
+#Installation d'un système de gestion de ticket
+	vcsrepo { '/www/subdomain/ticket':
+	ensure   => present,
+	provider => git,
+	source   => 'https://github.com/osTicket/osTicket.git',
+	revision => '1.11.x',
+	}
+
+
+
+# Install de phpmyadmin
+	vcsrepo { '/www/subdomain/phpmyadmin':
+	ensure   => present,
+	provider => git,
+	source   => 'https://github.com/phpmyadmin/phpmyadmin.git',
+	revision => 'STABLE',
+	}
+	 ~>
+	exec { 'composer-phpmyadmin':
+	command => 'sudo composer install',
+	path    => ['/usr/bin', '/usr/sbin',],
+	cwd 	=> '/www/subdomain/phpmyadmin',
+	refreshonly => true,
+	require => Package['composer'],
+	subscribe => Package['composer', 'php7.2-gd','libgd3','php7.2-imap','php7.2-xml','php7.2-mbstring','php7.2-intl','php7.2-mysql','bzip2','php-apcu','phpunit', 'php7.2-curl', 'libapache2-mod-php7.2','php7.2-zip', 'php-imagick', 'php7.2-json', 'php7.2-bz2',],
+	}
+
+	file { '/www/subdomain/phpmyadmin/config.inc.php':
+	ensure => present,
+	source => 'puppet:///modules/files/phpmyadmin/config.inc.php',
+	}
+	file { ['/www/subdomain/phpmyadmin/tmp',
+	]:
+    ensure => 'directory',
+    owner  => 'www-data',
+    group  => 'www-data',
+    mode   => '0755',
+ }
+
+class { '::ruby':
+  version         => '2.6.2',
+  gems_version    => 'latest',
+}
+->	vcsrepo { '/www/subdomain/projet':
+	ensure   => present,
+	provider => git,
+	source   => 'https://github.com/redmine/redmine.git',
+	revision => '4.0-stable',
+	}
+->
+file { '/www/subdomain/projet/config/database.yml':
+	ensure => present,
+	source => 'puppet:///modules/files/redmine/database.yml',
+	}
+->mysql::db { 'redmine':
+  user     => 'redmine',
+  password => '*5629C36E3A0B97C8880C36C1590EFE4628E07B43',
+  host     => 'localhost',
+  grant    => ['SELECT', 'INSERT','UPDATE', 'DELETE', 'CREATE', 'ALTER', 'INDEX', 'DROP', 'CREATE TEMPORARY TABLES',],
+	require => Service['mysql']}
+->
+	exec { 'install-gems':
+	command =>  'gem update --system;
+		sudo gem install bundler;
+		sudo gem install nokogiri -- --use-system-libraries;
+		sudo gem install mysql2 -v 0.5.2;
+		sudo gem install rails -v 5.2.3;
+		sudo bundle install --without development test;
+		rake generate_secret_token;
+		RAILS_ENV=production rake db:migrate;
+		sudo RAILS_ENV=production rake redmine:load_default_data;
+		sudo mkdir tmp public/plugin_assets;
+		sudo chown -R www-data:www-data files log tmp public/plugin_assets;
+		sudo chmod -R 755 files log tmp public/plugin_assets;
+		ruby bin/rails server webrick -e production;',
+	path    => ['/usr/bin', '/usr/sbin',],
+	cwd 		=> '/www/subdomain/projet',
+	require => Service['mysql'],
+	subscribe => Package[ 'libapache2-mod-passenger', 'composer', 'php7.2-gd','libgd3','php7.2-imap','php7.2-xml','php7.2-mbstring','php7.2-intl','php7.2-mysql','bzip2','php-apcu','phpunit', 'php7.2-curl', 'libapache2-mod-php7.2','php7.2-zip', 'php-imagick', 'php7.2-json', 'php7.2-bz2','ruby-libxml', 'libxslt1-dev', 'libmysqlclient-dev', 'libmagickcore-dev', 'libmagickwand-dev'],
+	}
+
+
+
+	vcsrepo { '/www/subdomain/cas':
+	ensure   => present,
+	provider => git,
+	source   => 'https://github.com/apereo/phpCAS.git',
+	revision => '1.3-stable',
+	}
+
+
+	vcsrepo { '/www/subdomain/intranet':
+	ensure   => present,
+	provider => git,
+	source   => 'https://github.com/arrivix/compta-urafpa.git',
+	revision => 'master',
+	}
+	~>
+	exec { 'composer-intranet':
+	command => 'sudo composer install',
+	path    => ['/usr/bin', '/usr/sbin',],
+	cwd 	=> '/www/subdomain/intranet',
+	require => Package['composer']
+	}
+
+
+
+
+class {'::mysql::server':
+  package_name     => 'mariadb-server',
+  service_name     => 'mysql',
+	config_file      => '/etc/my.cnf',
+  includedir       => '/etc/my.cnf.d',
+  override_options => {
+    mysqld => {
+      'log-error' => '/var/log/mysql/mariadb.log',
+      'pid-file'  => '/var/run/mysqld/mysqld.pid',
+    },
+    mysqld_safe => {
+      'log-error' => '/var/log/mysql/mariadb.log',
+    },
+  }
+}
+
+class {'::mysql::client':
+  package_name     => 'mariadb-client',
+  }
+
+
+class my_fw::pre {
+  Firewall {
+    require => undef,
+  }
+	resources { 'firewall':
+		purge => true,
+	}
+	resources { 'firewallchain':
+  purge => true,
+	}
+#Bloque tout le trafic
+  firewall { '999 drop all other input rules':
+  chain  => 'INPUT',
+  action => 'drop',
+	}
+  firewall { '998 drop all other forward rules':
+  chain  => 'FORWARD',
+  action => 'drop',
+  }
+  firewall { '997 drop all other output rules':
+  chain  => 'OUTPUT',
+  action => 'drop',
+  }
+# Autorise les connexions déjà établies et localhost
+	firewall { '001 accept related established rules':
+    chain  => 'INPUT',
+    proto  => 'all',
+    state  => ['RELATED', 'ESTABLISHED'],
+    action => 'accept',
+  }
+  firewall { '002 accept related established rules':
+    chain  => 'OUTPUT',
+    proto  => 'all',
+    state  => ['RELATED', 'ESTABLISHED'],
+    action => 'accept',
+  }
+  firewall { '003 accept output localhost connection rules':
+    chain  => 'OUTPUT',
+    iniface=> 'lo',
+    proto  => 'all',
+    action => 'accept',
+  }
+    firewall { '004 accept input localhost connection rules':
+    chain  => 'INPUT',
+    iniface=> 'lo',
+    proto  => 'all',
+    action => 'accept',
+  }
+# Autorise ICMP (Ping)
+    firewall { '005 accept input localhost connection rules':
+    chain  => 'INPUT',
+    proto  => 'icmp',
+    action => 'accept',
+  }
+    firewall { '006 accept input localhost connection rules':
+    chain  => 'OUTPUT',
+    proto  => 'icmp',
+    action => 'accept',
+  }
+# Autorise SSH (Ping)
+    firewall { '007 accept input localhost connection rules':
+		chain  => 'INPUT',
+		dport  => 22,
+		proto  => 'tcp',
+		action => 'accept',
+  }
+    firewall { '008 accept output localhost connection rules':
+    chain  => 'OUTPUT',
+		dport  => 22,
+		proto  => 'tcp',
+		action => 'accept',
+  }
+# Autorise DNS
+    firewall { '009 accept input output DNS connection rules':
+		chain  => ['INPUT','OUTPUT'],
+		dport  => 53,
+		proto  => ['tcp','udp'],
+		action => 'accept',
+  }
+# Autorise HTTP et HTTPS, FTP
+    firewall { '010 accept HTTP HTTPS FTP connection rules':
+		chain  => ['INPUT','OUTPUT'],
+		dport  => [80, 443, 20, 21],
+		proto  => 'tcp',
+		action => 'accept',
+  }
+# Autorise MAIL:  SMTP, POP3 et IMAP
+    firewall { '011 accept SMTP POP3 IMAP connection rules':
+		chain  => ['INPUT','OUTPUT'],
+		dport  => [25, 110, 143],
+		proto  => 'tcp',
+		action => 'accept',
+  }
+# Autorise NTP
+    firewall { '012 accept NTP connection rules':
+		chain  => 'OUTPUT',
+		dport  => 123,
+		proto  => 'udp',
+		action => 'accept',
+  }
+# Protection DDOS
+    firewall { '013 accept SYN 1 sec connection rules':
+		chain  		=> 'FORWARD',
+		limit  		=> '1/sec',
+		tcp_flags	=> 'SYN',
+		action => 'accept',
+  }
+    firewall { '014 accept UDP connection rules':
+		chain  		=> 'FORWARD',
+		limit  		=> '1/sec',
+		proto			=> 'udp',
+		action 		=> 'accept',
+  }
+  	firewall { '015 accept UDP connection rules':
+		chain  		=> 'FORWARD',
+		limit  		=> '1/sec',
+		proto			=> 'icmp',
+		icmp			=> 'echo-request',
+		action 		=> 'accept',
+  }
+}
+

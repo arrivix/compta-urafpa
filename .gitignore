@@ -17,4 +17,5 @@
 
 ###< symfony/doctrine ###
 /src/Migrations
+/App/Migrations
 ###< symfony/doctrine ###
